@@ -91,6 +91,78 @@
       font-size: 1rem;
     }
 
+    /* password gate styling */
+    .password-gate {
+      text-align: center;
+      padding: 1rem 0.5rem;
+    }
+
+    .password-label {
+      font-size: 0.9rem;
+      color: #cfd2e6;
+      letter-spacing: 1px;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .password-input-group {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .password-input {
+      background: rgba(10, 12, 22, 0.8);
+      border: 1px solid rgba(220, 200, 150, 0.4);
+      border-radius: 60px;
+      padding: 12px 20px;
+      font-family: 'Cascadia Code', monospace;
+      font-size: 1rem;
+      color: #f1e9d8;
+      outline: none;
+      width: 200px;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .password-input:focus {
+      border-color: #e9c79e;
+      box-shadow: 0 0 10px rgba(233, 199, 158, 0.3);
+    }
+
+    .password-btn {
+      background: rgba(233, 199, 158, 0.2);
+      border: 1px solid #e9c79e;
+      border-radius: 60px;
+      padding: 12px 24px;
+      font-family: 'Inter', monospace;
+      font-weight: 500;
+      color: #f3e3ca;
+      cursor: pointer;
+      transition: all 0.2s;
+      backdrop-filter: blur(4px);
+    }
+
+    .password-btn:hover {
+      background: rgba(233, 199, 158, 0.5);
+      color: white;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+
+    .error-msg {
+      color: #f0a3a3;
+      font-size: 0.8rem;
+      margin-top: 1rem;
+      min-height: 2rem;
+      letter-spacing: 0.3px;
+    }
+
+    /* hidden elements */
+    .hidden-content {
+      display: none;
+    }
+
     /* typewriter container */
     .typewriter-area {
       background: rgba(8, 10, 18, 0.55);
@@ -132,7 +204,7 @@
       50% { opacity: 0; background-color: #b89a6a; }
     }
 
-    /* extra delicate details */
+    /* decorative footer */
     .decorative-footer {
       display: flex;
       justify-content: center;
@@ -157,7 +229,6 @@
       100% { transform: scale(1); opacity: 0.7; }
     }
 
-    /* responsive */
     @media (max-width: 600px) {
       .story-card {
         padding: 1.6rem 1.2rem;
@@ -172,11 +243,9 @@
       .typewriter-area {
         padding: 1.2rem 1.2rem;
       }
-    }
-
-    /* smooth scroll */
-    html {
-      scroll-behavior: smooth;
+      .password-input {
+        width: 160px;
+      }
     }
   </style>
 </head>
@@ -190,23 +259,35 @@
     </div>
   </div>
 
-  <div class="typewriter-area">
-    <div id="storyDisplay" class="story-text"></div>
-    <span id="cursorSpan" class="cursor"></span>
+  <!-- Password Gate -->
+  <div id="passwordGate" class="password-gate">
+    <div class="password-label">🔐 enter the secret key</div>
+    <div class="password-input-group">
+      <input type="password" id="passwordInput" class="password-input" placeholder="• • •" autocomplete="off">
+      <button id="unlockBtn" class="password-btn">unlock</button>
+    </div>
+    <div id="errorMsg" class="error-msg"></div>
   </div>
 
-  <div class="decorative-footer">
-    <span>🌙</span>
-    <span>working on it · together</span>
-    <span class="heart-icon">❤︎</span>
+  <!-- Hidden story content (initially hidden) -->
+  <div id="hiddenStoryWrapper" class="hidden-content">
+    <div class="typewriter-area">
+      <div id="storyDisplay" class="story-text"></div>
+      <span id="cursorSpan" class="cursor"></span>
+    </div>
+    <div class="decorative-footer">
+      <span>🌙</span>
+      <span>working on it · together</span>
+      <span class="heart-icon">❤︎</span>
+    </div>
   </div>
 </div>
 
 <script>
-  // ✧˖° casual, cute short story: tech guy + bank teller, no comparisons, just love °˖✧
-  const fullStory = `We’re a weird combo: I debug code for a living, and you spend your days behind the teller window, handling cash and making people’s mornings a little brighter. Somehow, our puzzle pieces fit.
+  // ✧˖° the story (you can change this to any message for her) °˖✧
+  const fullStory = ` Hey. We’re a weird combo you know? I debug code for a living, and you spend your days behind the teller window, handling cash and making people’s mornings a little brighter. Somehow, our puzzle pieces fit.
 
-You tell me about your regulars, the counting process and "tea",  and I ramble about curious findings and code bugs that took three hours to solve. Yet when we’re on a call at night, none of that matters — it’s just us, laughing at how our worlds manage to feel like the same room.
+You tell me about your regulars, the counting process and "tea", and I ramble about curious findings and code bugs that took three hours to solve. Yet when we’re on a call at night, none of that matters — it’s just us, laughing at how our worlds manage to feel like the same room.
 
 The separation anxiety hits hardest on Sunday evenings. You’re about to head into a week of early shifts, counting drawers and helping customers, and I’ve got a sprint deadline looming. We squeeze in some Facetime while you're on the road, and you’ll say “we’ll figure this out.” And I know we will.
 
@@ -217,19 +298,24 @@ But here’s the thing: we’re working on it. We’ve got a shared calendar cou
 Until then, I’ll keep being your tech support, and you’ll keep reminding me that the best investments we make are in us. We’re two busy people building a life in the margins, and honestly? It’s the best project either of us has ever worked on.`;
 
   // DOM elements
+  const passwordGate = document.getElementById('passwordGate');
+  const hiddenWrapper = document.getElementById('hiddenStoryWrapper');
+  const passwordInput = document.getElementById('passwordInput');
+  const unlockBtn = document.getElementById('unlockBtn');
+  const errorMsg = document.getElementById('errorMsg');
   const storyContainer = document.getElementById('storyDisplay');
   const cursorSpan = document.getElementById('cursorSpan');
 
-  let index = 0;
   let typingInterval = null;
-  const typingSpeed = 48; // ms per character — elegant typewriter pace
+  let index = 0;
+  const typingSpeed = 48;
 
   function startTypewriter() {
     if (typingInterval) clearInterval(typingInterval);
     storyContainer.textContent = '';
     index = 0;
     cursorSpan.classList.remove('hidden-cursor');
-    
+
     typingInterval = setInterval(() => {
       if (index < fullStory.length) {
         storyContainer.textContent = fullStory.substring(0, index + 1);
@@ -249,28 +335,53 @@ Until then, I’ll keep being your tech support, and you’ll keep reminding me 
     }, typingSpeed);
   }
 
-  window.addEventListener('DOMContentLoaded', () => {
-    startTypewriter();
+  function unlockContent() {
+    const entered = passwordInput.value.trim();
+    if (entered === "Clo") {
+      // hide password gate, show story
+      passwordGate.classList.add('hidden-content');
+      hiddenWrapper.classList.remove('hidden-content');
+      startTypewriter();
+      errorMsg.textContent = '';
+    } else {
+      errorMsg.textContent = '❄️ not quite... try again? ❄️';
+      passwordInput.value = '';
+      passwordInput.focus();
+    }
+  }
+
+  // event listeners
+  unlockBtn.addEventListener('click', unlockContent);
+  passwordInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') unlockContent();
   });
 
-  // double-click to restart the typewriter effect (hidden easter egg)
+  // double-click on story card to restart typewriter (only after unlocked)
   const card = document.querySelector('.story-card');
   card.addEventListener('dblclick', (e) => {
-    if (typingInterval) {
-      clearInterval(typingInterval);
-      typingInterval = null;
+    // only restart if story is visible
+    if (!hiddenWrapper.classList.contains('hidden-content')) {
+      if (typingInterval) {
+        clearInterval(typingInterval);
+        typingInterval = null;
+      }
+      storyContainer.textContent = '';
+      cursorSpan.classList.remove('hidden-cursor');
+      index = 0;
+      startTypewriter();
+      const area = document.querySelector('.typewriter-area');
+      if (area) {
+        area.style.transition = 'background 0.15s';
+        area.style.background = 'rgba(30, 25, 45, 0.8)';
+        setTimeout(() => {
+          area.style.background = 'rgba(8, 10, 18, 0.55)';
+        }, 180);
+      }
     }
-    storyContainer.textContent = '';
-    cursorSpan.classList.remove('hidden-cursor');
-    index = 0;
-    startTypewriter();
-    const area = document.querySelector('.typewriter-area');
-    area.style.transition = 'background 0.15s';
-    area.style.background = 'rgba(30, 25, 45, 0.8)';
-    setTimeout(() => {
-      area.style.background = 'rgba(8, 10, 18, 0.55)';
-    }, 180);
   });
+
+  // optionally, if the user typed the password correctly once, keep it.
+  // also, for extra privacy, we don't store anything.
 </script>
 
 </body>
