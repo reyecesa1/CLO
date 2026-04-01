@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Separation Anxiety · tech & bank teller love story</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at 30% 10%, #0b0c15, #03040a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', 'Cascadia Code', 'SF Mono', 'Courier New', monospace;
+      padding: 2rem;
+      position: relative;
+      color: #edeef2;
+    }
+
+    /* soft grain texture overlay (aesthetic) */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjUiIG51bU9jdGF2ZXM9IjMiLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjZikiIG9wYWNpdHk9IjAuMDMiLz48L3N2Zz4=');
+      opacity: 0.2;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* main glass-card container */
+    .story-card {
+      max-width: 780px;
+      width: 100%;
+      background: rgba(18, 22, 35, 0.7);
+      backdrop-filter: blur(12px);
+      border-radius: 2.5rem;
+      border: 1px solid rgba(255, 245, 215, 0.15);
+      box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(235, 220, 180, 0.05) inset;
+      padding: 2.5rem 2rem;
+      transition: all 0.2s ease;
+      z-index: 2;
+    }
+
+    /* title area */
+    .title-section {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      border-bottom: 1px dashed rgba(235, 220, 180, 0.3);
+      display: inline-block;
+      width: 100%;
+    }
+
+    h1 {
+      font-family: 'Inter', 'Times New Roman', serif;
+      font-weight: 500;
+      font-size: 2.3rem;
+      letter-spacing: -0.3px;
+      background: linear-gradient(135deg, #FDEBD0, #E9C79E);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .sub {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #a9aec9;
+      margin-top: -0.2rem;
+      margin-bottom: 0.75rem;
+      font-weight: 400;
+    }
+
+    .sub span {
+      font-size: 1rem;
+    }
+
+    /* typewriter container */
+    .typewriter-area {
+      background: rgba(8, 10, 18, 0.55);
+      border-radius: 1.8rem;
+      padding: 1.6rem 1.9rem;
+      margin: 1rem 0 0.5rem 0;
+      border: 1px solid rgba(220, 200, 150, 0.2);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .story-text {
+      font-family: 'Cascadia Code', 'Courier Prime', 'Fira Code', monospace;
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: #f1f0eb;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-weight: 420;
+    }
+
+    /* cursor styling */
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      background-color: #f3cf9a;
+      margin-left: 3px;
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+      border-radius: 2px;
+    }
+
+    .cursor.hidden-cursor {
+      display: none;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; background-color: #f3cf9a; box-shadow: 0 0 4px #f0c28e; }
+      50% { opacity: 0; background-color: #b89a6a; }
+    }
+
+    /* extra delicate details */
+    .decorative-footer {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 2rem;
+      font-size: 0.75rem;
+      color: #8b8ea8;
+      border-top: 1px dashed rgba(235, 220, 180, 0.2);
+      padding-top: 1.4rem;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+
+    .heart-icon {
+      animation: softPulse 2s infinite ease;
+      display: inline-block;
+    }
+
+    @keyframes softPulse {
+      0% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.08); opacity: 1; text-shadow: 0 0 4px #f4cda6; }
+      100% { transform: scale(1); opacity: 0.7; }
+    }
+
+    /* responsive */
+    @media (max-width: 600px) {
+      .story-card {
+        padding: 1.6rem 1.2rem;
+      }
+      .story-text {
+        font-size: 0.95rem;
+        line-height: 1.65;
+      }
+      h1 {
+        font-size: 1.8rem;
+      }
+      .typewriter-area {
+        padding: 1.2rem 1.2rem;
+      }
+    }
+
+    /* smooth scroll */
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body>
+
+<div class="story-card">
+  <div class="title-section">
+    <h1>✦ separation anxiety ✦</h1>
+    <div class="sub">
+      <span>⚘</span> a story in typewriter ink <span>⚘</span>
+    </div>
+  </div>
+
+  <div class="typewriter-area">
+    <div id="storyDisplay" class="story-text"></div>
+    <span id="cursorSpan" class="cursor"></span>
+  </div>
+
+  <div class="decorative-footer">
+    <span>🌙</span>
+    <span>working on it · together</span>
+    <span class="heart-icon">❤︎</span>
+  </div>
+</div>
+
+<script>
+  // ✧˖° casual, cute short story: tech guy + bank teller, no comparisons, just love °˖✧
+  const fullStory = `We’re a weird combo: I debug code for a living, and you spend your days behind the teller window, handling cash and making people’s mornings a little brighter. But somehow, our mismatched puzzle pieces fit.
+
+You tell me about the regular who brought you cookies, and I ramble about merge conflicts that took three hours to solve. Yet when we’re on a call at midnight, none of that matters — it’s just us, laughing at how our worlds manage to feel like the same room.
+
+The separation anxiety hits hardest on Sunday evenings. You’re about to head into a week of early shifts, counting drawers and helping customers, and I’ve got a sprint deadline looming. We squeeze in a video call between your uniform prep and my caffeine run, and you’ll say “we’ll figure this out.” And I know we will.
+
+We’re not the typical love story. Our dates are late-night texts with emojis only we understand. Our love language is sending memes about being tired and excited about the next time we’ll actually be in the same room.
+
+But here’s the thing: we’re working on it. We’ve got a shared calendar counting down to when we can stop saying “see you soon” and just say “good morning” in person.
+
+Until then, I’ll keep being your tech support, and you’ll keep reminding me that the best investments we make are in us. We’re two busy people building a life in the margins, and honestly? It’s the best project either of us has ever worked on.`;
+
+  // DOM elements
+  const storyContainer = document.getElementById('storyDisplay');
+  const cursorSpan = document.getElementById('cursorSpan');
+
+  let index = 0;
+  let typingInterval = null;
+  const typingSpeed = 48; // ms per character — elegant typewriter pace
+
+  function startTypewriter() {
+    if (typingInterval) clearInterval(typingInterval);
+    storyContainer.textContent = '';
+    index = 0;
+    cursorSpan.classList.remove('hidden-cursor');
+    
+    typingInterval = setInterval(() => {
+      if (index < fullStory.length) {
+        storyContainer.textContent = fullStory.substring(0, index + 1);
+        index++;
+        if (index === fullStory.length) {
+          clearInterval(typingInterval);
+          typingInterval = null;
+          setTimeout(() => {
+            cursorSpan.classList.add('hidden-cursor');
+          }, 800);
+        }
+      } else {
+        clearInterval(typingInterval);
+        typingInterval = null;
+        cursorSpan.classList.add('hidden-cursor');
+      }
+    }, typingSpeed);
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    startTypewriter();
+  });
+
+  // double-click to restart the typewriter effect (hidden easter egg)
+  const card = document.querySelector('.story-card');
+  card.addEventListener('dblclick', (e) => {
+    if (typingInterval) {
+      clearInterval(typingInterval);
+      typingInterval = null;
+    }
+    storyContainer.textContent = '';
+    cursorSpan.classList.remove('hidden-cursor');
+    index = 0;
+    startTypewriter();
+    const area = document.querySelector('.typewriter-area');
+    area.style.transition = 'background 0.15s';
+    area.style.background = 'rgba(30, 25, 45, 0.8)';
+    setTimeout(() => {
+      area.style.background = 'rgba(8, 10, 18, 0.55)';
+    }, 180);
+  });
+</script>
+
+</body>
+</html>
