@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Separation Anxiety · tech & bank teller love story</title>
+  <title>Separation Anxiety · our story archive</title>
   <style>
     * {
       margin: 0;
@@ -23,7 +23,6 @@
       color: #edeef2;
     }
 
-    /* soft grain texture overlay (aesthetic) */
     body::before {
       content: "";
       position: fixed;
@@ -37,7 +36,6 @@
       z-index: 0;
     }
 
-    /* main glass-card container */
     .story-card {
       max-width: 780px;
       width: 100%;
@@ -51,10 +49,9 @@
       z-index: 2;
     }
 
-    /* title area */
     .title-section {
       text-align: center;
-      margin-bottom: 2.5rem;
+      margin-bottom: 2rem;
       border-bottom: 1px dashed rgba(235, 220, 180, 0.3);
       display: inline-block;
       width: 100%;
@@ -87,11 +84,7 @@
       font-weight: 400;
     }
 
-    .sub span {
-      font-size: 1rem;
-    }
-
-    /* password gate styling */
+    /* password gate */
     .password-gate {
       text-align: center;
       padding: 1rem 0.5rem;
@@ -155,12 +148,54 @@
       font-size: 0.8rem;
       margin-top: 1rem;
       min-height: 2rem;
-      letter-spacing: 0.3px;
     }
 
-    /* hidden elements */
-    .hidden-content {
-      display: none;
+    /* story selector (blog-like) */
+    .story-selector {
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .selector-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #b9bdd6;
+      margin-bottom: 0.7rem;
+    }
+
+    .story-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .story-btn {
+      background: rgba(25, 30, 45, 0.7);
+      border: 1px solid rgba(233, 199, 158, 0.4);
+      border-radius: 40px;
+      padding: 8px 18px;
+      font-family: 'Inter', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #e9dbbc;
+      cursor: pointer;
+      transition: all 0.2s;
+      backdrop-filter: blur(2px);
+    }
+
+    .story-btn:hover {
+      background: rgba(233, 199, 158, 0.25);
+      border-color: #e9c79e;
+      color: white;
+    }
+
+    .story-btn.active {
+      background: rgba(233, 199, 158, 0.4);
+      border-color: #f3cf9a;
+      color: #fff3e0;
+      box-shadow: 0 0 6px rgba(233, 199, 158, 0.4);
     }
 
     /* typewriter container */
@@ -184,7 +219,6 @@
       font-weight: 420;
     }
 
-    /* cursor styling */
     .cursor {
       display: inline-block;
       width: 2px;
@@ -204,7 +238,6 @@
       50% { opacity: 0; background-color: #b89a6a; }
     }
 
-    /* decorative footer */
     .decorative-footer {
       display: flex;
       justify-content: center;
@@ -215,7 +248,6 @@
       border-top: 1px dashed rgba(235, 220, 180, 0.2);
       padding-top: 1.4rem;
       text-align: center;
-      letter-spacing: 0.5px;
     }
 
     .heart-icon {
@@ -227,6 +259,10 @@
       0% { transform: scale(1); opacity: 0.7; }
       50% { transform: scale(1.08); opacity: 1; text-shadow: 0 0 4px #f4cda6; }
       100% { transform: scale(1); opacity: 0.7; }
+    }
+
+    .hidden-content {
+      display: none;
     }
 
     @media (max-width: 600px) {
@@ -242,9 +278,6 @@
       }
       .typewriter-area {
         padding: 1.2rem 1.2rem;
-      }
-      .password-input {
-        width: 160px;
       }
     }
   </style>
@@ -269,12 +302,20 @@
     <div id="errorMsg" class="error-msg"></div>
   </div>
 
-  <!-- Hidden story content (initially hidden) -->
+  <!-- Hidden blog area (appears after password) -->
   <div id="hiddenStoryWrapper" class="hidden-content">
+    <!-- story selector -->
+    <div class="story-selector">
+      <div class="selector-label">✧ pick a letter ✧</div>
+      <div class="story-buttons" id="storyButtonsContainer"></div>
+    </div>
+
+    <!-- typewriter area -->
     <div class="typewriter-area">
       <div id="storyDisplay" class="story-text"></div>
       <span id="cursorSpan" class="cursor"></span>
     </div>
+
     <div class="decorative-footer">
       <span>🌙</span>
       <span>working on it · together</span>
@@ -284,18 +325,41 @@
 </div>
 
 <script>
-  // ✧˖° the story (you can change this to any message for her) °˖✧
-  const fullStory = ` Hey. We’re a weird combo you know? I debug code for a living, and you spend your days behind the teller window, handling cash and making people’s mornings a little brighter. Somehow, our puzzle pieces fit.
+  // ---------- STORY ARCHIVE (add as many as you like) ----------
+  const stories = [
+    {
+      id: "usual",
+      title: "📖 our usual story",
+      content: `Hey. We're a weird combo you know? I debug code for a living, and you spend your days behind the teller window, handling cash and making people's mornings a little brighter. Somehow, our puzzle pieces fit.
 
-You tell me about your regulars, the counting process and "tea", and I ramble about curious findings and code bugs that took three hours to solve. Yet when we’re on a call at night, none of that matters — it’s just us, laughing at how our worlds manage to feel like the same room.
+You tell me about your regulars, the counting process and "tea", and I ramble about curious findings and code bugs that took three hours to solve. Yet when we're on a call at night, none of that matters — it's just us, laughing at how our worlds manage to feel like the same room.
 
-The separation anxiety hits hardest on Sunday evenings. You’re about to head into a week of early shifts, counting drawers and helping customers, and I’ve got a sprint deadline looming. We squeeze in some Facetime while you're on the road, and you’ll say “we’ll figure this out.” And I know we will.
+The separation anxiety hits hardest on Sunday evenings. You're about to head into a week of early shifts, counting drawers and helping customers, and I've got a sprint deadline looming. We squeeze in some Facetime while you're on the road, and you'll say "we'll figure this out." And I know we will.
 
-We’re not the typical love story. Our dates have been special, feeling like time stops and our late-night calls are full with jokes only we understand. Our love language is being there for each other, sending tiktoks and talking about being excited for when the next time we’ll actually be in the same room.
+We're not the typical love story. Our dates have been special, feeling like time stops and our late-night calls are full with jokes only we understand. Our love language is being there for each other, sending tiktoks and talking about being excited for when the next time we'll actually be in the same room.
 
-But here’s the thing: we’re working on it. We’ve got a shared calendar counting down to when we can stop saying “see you soon” and just say “good morning” in person.
+But here's the thing: we're working on it. We've got a shared calendar counting down to when we can stop saying "see you soon" and just say "good morning" in person.
 
-Until then, I’ll keep being your tech support, and you’ll keep reminding me that the best investments we make are in us. We’re two busy people building a life in the margins, and honestly? It’s the best project either of us has ever worked on.`;
+Until then, I'll keep being your tech support, and you'll keep reminding me that the best investments we make are in us. We're two busy people building a life in the margins, and honestly? It's the best project either of us has ever worked on.`
+    },
+    {
+      id: "rainy",
+      title: "☔ rainy day · the puddle waltz",
+      content: `It's raining today. The kind of soft, endless rain that makes the whole world feel like a watercolour painting — blurred edges, warm cups of tea, and the sound of droplets against your bank's window.
+
+I'm sitting here listening to the storm roll through my neighbourhood, and I can't help but imagine you counting your drawer, looking up at the grey sky, and thinking the same thing I am: "I wish we were watching this together."
+
+There's something about rain that makes distance feel louder. Every drop is a little reminder of a kiss I owe you, a hand I'd hold under an umbrella, the way your hair smells after being caught in a drizzle.
+
+But then I smile, because rain also means growth. It means we're watering the same garden even from two different cities. You texted me "it's pouring here too" — and suddenly we're sharing the same weather, the same mood, the same quiet hope.
+
+One day we'll sit by a foggy window, listening to the rain hit the glass, and we won't have to say "I miss you" because we'll finally be in the same room. Until then, I'll keep sending you voice notes with the rain in the background, and you'll keep sending me pictures of wet sidewalks from your break.
+
+We're two people learning to dance in separate puddles, but our rhythm has always been the same. This rain is just a prelude to our spring.`
+    }
+    // 👇 add more stories here following the same format
+    // { id: "another", title: "✨ title", content: "..." },
+  ];
 
   // DOM elements
   const passwordGate = document.getElementById('passwordGate');
@@ -305,22 +369,25 @@ Until then, I’ll keep being your tech support, and you’ll keep reminding me 
   const errorMsg = document.getElementById('errorMsg');
   const storyContainer = document.getElementById('storyDisplay');
   const cursorSpan = document.getElementById('cursorSpan');
+  const storyButtonsContainer = document.getElementById('storyButtonsContainer');
 
+  let activeStoryId = stories[0].id;
   let typingInterval = null;
   let index = 0;
   const typingSpeed = 48;
 
-  function startTypewriter() {
+  // Typewriter engine
+  function startTypewriter(content) {
     if (typingInterval) clearInterval(typingInterval);
     storyContainer.textContent = '';
     index = 0;
     cursorSpan.classList.remove('hidden-cursor');
 
     typingInterval = setInterval(() => {
-      if (index < fullStory.length) {
-        storyContainer.textContent = fullStory.substring(0, index + 1);
+      if (index < content.length) {
+        storyContainer.textContent = content.substring(0, index + 1);
         index++;
-        if (index === fullStory.length) {
+        if (index === content.length) {
           clearInterval(typingInterval);
           typingInterval = null;
           setTimeout(() => {
@@ -335,13 +402,51 @@ Until then, I’ll keep being your tech support, and you’ll keep reminding me 
     }, typingSpeed);
   }
 
+  // Load a story by ID
+  function loadStory(storyId) {
+    const story = stories.find(s => s.id === storyId);
+    if (!story) return;
+    activeStoryId = storyId;
+    startTypewriter(story.content);
+    // update active button style
+    document.querySelectorAll('.story-btn').forEach(btn => {
+      if (btn.dataset.id === storyId) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  }
+
+  // Build the story selector buttons
+  function buildSelector() {
+    storyButtonsContainer.innerHTML = '';
+    stories.forEach(story => {
+      const btn = document.createElement('button');
+      btn.className = 'story-btn';
+      btn.textContent = story.title;
+      btn.dataset.id = story.id;
+      btn.addEventListener('click', () => {
+        if (activeStoryId !== story.id) {
+          loadStory(story.id);
+        }
+      });
+      storyButtonsContainer.appendChild(btn);
+    });
+    // set active class on first story
+    const firstBtn = storyButtonsContainer.querySelector('.story-btn');
+    if (firstBtn) firstBtn.classList.add('active');
+  }
+
+  // Unlock with password
   function unlockContent() {
     const entered = passwordInput.value.trim();
     if (entered === "Clo") {
-      // hide password gate, show story
       passwordGate.classList.add('hidden-content');
       hiddenWrapper.classList.remove('hidden-content');
-      startTypewriter();
+      buildSelector();
+      // load the first story (or the one saved)
+      loadStory(stories[0].id);
       errorMsg.textContent = '';
     } else {
       errorMsg.textContent = '❄️ not quite... try again? ❄️';
@@ -350,38 +455,34 @@ Until then, I’ll keep being your tech support, and you’ll keep reminding me 
     }
   }
 
-  // event listeners
+  // Event listeners
   unlockBtn.addEventListener('click', unlockContent);
   passwordInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') unlockContent();
   });
 
-  // double-click on story card to restart typewriter (only after unlocked)
+  // Double-click restart (works on the typewriter area after unlocked)
   const card = document.querySelector('.story-card');
   card.addEventListener('dblclick', (e) => {
-    // only restart if story is visible
     if (!hiddenWrapper.classList.contains('hidden-content')) {
-      if (typingInterval) {
-        clearInterval(typingInterval);
-        typingInterval = null;
-      }
-      storyContainer.textContent = '';
-      cursorSpan.classList.remove('hidden-cursor');
-      index = 0;
-      startTypewriter();
-      const area = document.querySelector('.typewriter-area');
-      if (area) {
-        area.style.transition = 'background 0.15s';
-        area.style.background = 'rgba(30, 25, 45, 0.8)';
-        setTimeout(() => {
-          area.style.background = 'rgba(8, 10, 18, 0.55)';
-        }, 180);
+      const currentStory = stories.find(s => s.id === activeStoryId);
+      if (currentStory) {
+        if (typingInterval) clearInterval(typingInterval);
+        storyContainer.textContent = '';
+        cursorSpan.classList.remove('hidden-cursor');
+        index = 0;
+        startTypewriter(currentStory.content);
+        const area = document.querySelector('.typewriter-area');
+        if (area) {
+          area.style.transition = 'background 0.15s';
+          area.style.background = 'rgba(30, 25, 45, 0.8)';
+          setTimeout(() => {
+            area.style.background = 'rgba(8, 10, 18, 0.55)';
+          }, 180);
+        }
       }
     }
   });
-
-  // optionally, if the user typed the password correctly once, keep it.
-  // also, for extra privacy, we don't store anything.
 </script>
 
 </body>
